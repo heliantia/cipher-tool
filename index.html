@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+  }
+</script>
 <head>
   <meta charset="UTF-8" />
   <title>Cider Cipher</title>
