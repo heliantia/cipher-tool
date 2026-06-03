@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
-  }
-</script>
+
 <head>
   <meta charset="UTF-8" />
   <title>Cider Cipher</title>
 
+  <!-- PWA -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#000000">
 
@@ -24,6 +21,7 @@
       width: 100%;
       height: 120px;
       font-size: 16px;
+      padding: 10px;
     }
 
     .output {
@@ -33,39 +31,49 @@
       min-height: 120px;
       margin-top: 10px;
     }
+
+    button {
+      padding: 10px 15px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
   </style>
 </head>
 
 <body>
-<button id="installBtn" style="display:none; padding:10px 15px; margin-bottom:10px;"> Download
+
+<button id="installBtn" style="display:none;">
+  Install App
 </button>
-<textarea id="input" placeholder="try: Cider Cipher is so cool XD !!"></textarea>
+
+<textarea id="input" placeholder="try: Cipher 123"></textarea>
 
 <h3>Output</h3>
 <div class="output" id="output"></div>
 
 <script>
+  // 🔐 CIPHER MAP (letters + numbers)
   const map = {
-  a:'e', e:'a',
-  b:'d', d:'b',
-  c:'o', o:'c',
-  f:'t', t:'f',
-  g:'s', s:'g',
-  h:'n', n:'h',
-  i:'j', j:'i',
-  k:'y', y:'k',
-  l:'x', x:'l',
-  m:'w', w:'m',
-  p:'q', q:'p',
-  r:'z', z:'r',
-  u:'v', v:'u',
+    a:'e', e:'a',
+    b:'d', d:'b',
+    c:'o', o:'c',
+    f:'t', t:'f',
+    g:'s', s:'g',
+    h:'n', n:'h',
+    i:'j', j:'i',
+    k:'y', y:'k',
+    l:'x', x:'l',
+    m:'w', w:'m',
+    p:'q', q:'p',
+    r:'z', z:'r',
+    u:'v', v:'u',
 
-  1:'7', 7:'1',
-  2:'4', 4:'2',
-  3:'5', 5:'3',
-  6:'9', 9:'6',
-  0:'8', 8:'0'
-};
+    1:'7', 7:'1',
+    2:'4', 4:'2',
+    3:'5', 5:'3',
+    6:'9', 9:'6',
+    0:'8', 8:'0'
+  };
 
   function transformText(text) {
     let output = "";
@@ -91,30 +99,32 @@
   });
 
   update();
+
+  // 📲 PWA install button
+  let deferredPrompt;
+  const installBtn = document.getElementById("installBtn");
+
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = "block";
+  });
+
+  installBtn.addEventListener("click", async () => {
+    if (!deferredPrompt) return;
+
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+
+    deferredPrompt = null;
+    installBtn.style.display = "none";
+  });
+
+  // 🔧 Service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+  }
 </script>
-<script>
-let deferredPrompt;
-const installBtn = document.getElementById("installBtn");
 
-// O browser diz quando a app é instalável
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault(); // impede o popup automático
-  deferredPrompt = e;
-  installBtn.style.display = "block"; // mostra o botão
-});
-
-// quando clicas no botão
-installBtn.addEventListener("click", async () => {
-  if (!deferredPrompt) return;
-
-  deferredPrompt.prompt(); // mostra popup de instalação
-
-  const choice = await deferredPrompt.userChoice;
-  console.log(choice.outcome);
-
-  deferredPrompt = null;
-  installBtn.style.display = "none"; // esconde depois de usar
-});
-</script>
 </body>
 </html>
