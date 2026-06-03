@@ -1,7 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Cider Cipher</title>
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#000000">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 120px;
+      font-size: 16px;
+    }
+
+    .output {
+      white-space: pre-wrap;
+      background: #f4f4f4;
+      padding: 10px;
+      min-height: 120px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
 <textarea id="input" placeholder="try: Cider Cipher is so cool XD !!"></textarea>
 
 <h3>Output</h3>
-<div class="output" id="output"></div><script>
+<div class="output" id="output"></div>
+
+<script>
   const map = {
     a:'e', e:'a',
     b:'d', d:'b',
@@ -33,16 +71,16 @@
     output.innerText = transformText(input.value);
   }
 
-  // 🔥 transforma enquanto escreves
   input.addEventListener("input", update);
 
-  // 🔥 Enter também força atualização (caso queiras “sentir app”)
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       setTimeout(update, 0);
     }
   });
 
-  // inicial
   update();
 </script>
+
+</body>
+</html>
